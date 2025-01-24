@@ -1,0 +1,70 @@
+body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        border: 1px solid #ffffff; 
+        padding: 0; 
+        background: linear-gradient(135deg, #ffffff, #9fdcff);
+        box-sizing: border-box; 
+        overflow: hidden; 
+      }
+      
+      
+      .container {
+        width: 300px;
+        padding: 10px;
+        color: rgb(0, 0, 0);
+      }
+      
+      .title {
+        text-align: center;
+        font-size: 18px;
+        padding: 8px;
+        margin-top: 0px;
+        color: #000000;
+        border: 2px solid #000000;
+        border-radius: 10px;
+        font-weight: bold       ;
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      }
+      
+      .timezones {
+        max-height: 465px;
+        overflow-y: auto;
+      }
+      
+      .timezone-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 12px;
+        margin: 5px 0;
+        background: #26beff;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+      
+      .timezone-name {
+        flex: 1;
+        font-size: 17px;
+        font: bold;
+      }
+      
+      .timezone-time {
+        font-size: 15px;
+        font-weight: bold;
+        text-align: right;
+      }
+      
+      
+      .timezone-utc {
+        font-size: 14px;
+        font-weight: bold;
+      }
+      
+      .footer {
+        text-align: center;
+        font-size: 12px;
+        margin-top: 10px;
+        opacity: 0.8;
+      }
+      
