@@ -9,7 +9,7 @@ body {
 	width: 320px;
 	margin: 0 auto;
 	padding: 10px 5px;
-	min-height: 400px; /* Default minimum height */
+	min-height: 380px; /* Default minimum height */
 	max-height: none; /* Allows height to grow dynamically */
 	overflow: hidden; /* Prevents unnecessary scrollbars */
 	transition: height 0.3s ease; /* Smooth height transition */
@@ -23,16 +23,16 @@ body {
 	border-radius: 10px;
 	background-color: #ffffff;
 	color: #000000;
-	margin-bottom: 10px;
+	margin-bottom: 15px; /* Increased space between title and timezones */
     }
     
     .timezones {
 	max-height: 450px;
 	overflow-y: auto;
+	margin-top: 5px; /* Extra space below title */
     }
     
     .timezone-item {
-	margin-top: px;
 	font-size: 15px;
 	display: flex;
 	justify-content: space-between;
@@ -62,7 +62,7 @@ body {
     }
     
     .delete-btn {
-	align-items:flex-end;
+	align-items: flex-end;
 	padding: 3px 7px;
 	background-color: #ff4d4d;
 	color: #ffffff;
@@ -80,8 +80,7 @@ body {
     
     .add-country-btn {
 	display: block;
-	margin: 10px;
-	margin-left: 65px;
+	margin: 10px auto; 
 	text-align: center;
 	font-size: 15px;
 	width: 55%;
