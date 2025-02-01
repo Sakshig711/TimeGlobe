@@ -11,12 +11,12 @@ let displayedCountries = {
     };
     
     let availableCountries = [];
-    
     const maxAdditionalCountries = 10;
     
+    // Renders the list of displayed timezones
     function renderTimezones() {
 	const timezoneContainer = document.getElementById("timezones");
-	timezoneContainer.innerHTML = ""; // Clear existing timezones
+	timezoneContainer.innerHTML = ""; 
     
 	Object.entries(displayedCountries).forEach(([country, timezone]) => {
 	    const timezoneItem = document.createElement("div");
@@ -47,6 +47,7 @@ let displayedCountries = {
 	});
     }
     
+    // Gets the current time in a given timezone
     function getTimeInTimezone(timezone) {
 	return new Intl.DateTimeFormat("en-US", {
 	    timeZone: timezone,
@@ -56,8 +57,9 @@ let displayedCountries = {
 	}).format(new Date());
     }
     
-    // Fetch available countries from the API
+    // Fetches available countries from the API and removes duplicates
     async function fetchAvailableCountries() {
+	console.log("Fetching available countries...");
 	try {
 	    const response = await fetch("https://api.apyhub.com/data/dictionary/timezone", {
 		headers: {
@@ -67,12 +69,23 @@ let displayedCountries = {
 	    });
     
 	    const data = await response.json();
+	    console.log("API Response:", data);
     
 	    if (data && data.data) {
-		availableCountries = data.data.filter((tz) => {
-		    return tz.value && !Object.values(displayedCountries).includes(tz.value);
-		});
+		const uniqueTimezones = new Set();
     
+		availableCountries = data.data
+		    .map((tz) => tz.value)
+		    .filter((timezone) => {
+			if (!uniqueTimezones.has(timezone)) {
+			    uniqueTimezones.add(timezone);
+			    return true;
+			}
+			return false;
+		    })
+		    .map((timezone) => ({ country: timezone, timezone }));
+    
+		console.log("Filtered Available Countries:", availableCountries);
 		renderCountryDropdown();
 	    } else {
 		console.error("Invalid API response:", data);
@@ -82,36 +95,28 @@ let displayedCountries = {
 	}
     }
     
-    // Populate the dropdown with available countries
+    // Updates the country dropdown with available options
     function renderCountryDropdown() {
 	const countryDropdown = document.getElementById("country-dropdown");
-    
-	// Clear existing options
 	countryDropdown.innerHTML = "";
-    
-	if (availableCountries.length === 0) {
-	    const noOption = document.createElement("option");
-	    noOption.textContent = "No countries available";
-	    noOption.disabled = true;
-	    countryDropdown.appendChild(noOption);
-	    return;
-	}
     
 	availableCountries.forEach((country) => {
 	    const option = document.createElement("option");
-	    option.value = country.value;
-	    option.textContent = country.key;
+	    option.value = country.timezone;
+	    option.textContent = country.timezone;
 	    countryDropdown.appendChild(option);
 	});
+    
+	console.log("Dropdown Updated with Full Timezones");
     }
     
-    // Event listener for the "Add Country" button
+    // Opens the country selection modal and fetches countries
     document.getElementById("add-country").addEventListener("click", () => {
 	document.getElementById("country-selection-modal").style.display = "block";
 	fetchAvailableCountries();
     });
     
-    // Event listener for the "Confirm Add" button
+    // Adds the selected country to the displayed list
     document.getElementById("confirm-add").addEventListener("click", () => {
 	const countryDropdown = document.getElementById("country-dropdown");
 	const selectedOption = countryDropdown.options[countryDropdown.selectedIndex];
@@ -132,14 +137,11 @@ let displayedCountries = {
 	displayedCountries[countryName] = timezone;
 	renderTimezones();
     
-	// Remove the added country from the dropdown options
 	availableCountries = availableCountries.filter((country) => country.value !== timezone);
 	renderCountryDropdown();
     
-	// Close modal
 	document.getElementById("country-selection-modal").style.display = "none";
     
-	// Disable "Add More Countries" button if limit reached
 	const addCountryBtn = document.getElementById("add-country");
 	if (Object.keys(displayedCountries).length >= maxAdditionalCountries) {
 	    addCountryBtn.disabled = true;
@@ -147,6 +149,6 @@ let displayedCountries = {
 	}
     });
     
-    // Render default timezones on page load
+    // Initial render of default timezones
     renderTimezones();
     
