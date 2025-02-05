@@ -1,4 +1,4 @@
-// Default countries and their timezones
+// Default countries and their timezones (always displayed initially)
 let displayedCountries = {
 	Afghanistan: "Asia/Kabul",
 	Brazil: "America/Sao_Paulo",
@@ -7,148 +7,220 @@ let displayedCountries = {
 	France: "Europe/Paris",
 	Germany: "Europe/Berlin",
 	India: "Asia/Kolkata",
-	Japan: "Asia/Tokyo",
-    };
-    
-    let availableCountries = [];
-    const maxAdditionalCountries = 10;
-    
-    // Renders the list of displayed timezones
-    function renderTimezones() {
-	const timezoneContainer = document.getElementById("timezones");
-	timezoneContainer.innerHTML = ""; 
-    
-	Object.entries(displayedCountries).forEach(([country, timezone]) => {
-	    const timezoneItem = document.createElement("div");
-	    timezoneItem.className = "timezone-item";
-	    timezoneItem.innerHTML = `
-		<div class="timezone-info">
-		    <div class="timezone-name">${country}</div>
-		    <div class="timezone-time">${getTimeInTimezone(timezone)}</div>
-		</div>
-		<div class="timezone-actions">
-		    <button class="delete-btn" data-country="${country}">Delete</button>
-		</div>
-	    `;
-    
-	    timezoneItem.querySelector(".delete-btn").addEventListener("click", () => {
-		delete displayedCountries[country];
-		renderTimezones();
-		fetchAvailableCountries();
-    
-		const addCountryBtn = document.getElementById("add-country");
-		if (Object.keys(displayedCountries).length < maxAdditionalCountries) {
-		    addCountryBtn.disabled = false;
-		    addCountryBtn.textContent = "Add More Countries";
+	Japan: "Asia/Tokyo"
+};
+
+// Predefined static list of countries (up to 50)
+const predefinedCountries = {
+	United_States: "America/New_York",
+	Australia: "Australia/Sydney",
+	Russia: "Europe/Moscow",
+	Italy: "Europe/Rome",
+	Spain: "Europe/Madrid",
+	South_Korea: "Asia/Seoul",
+	Mexico: "America/Mexico_City",
+	South_Africa: "Africa/Johannesburg",
+	Argentina: "America/Argentina/Buenos_Aires",
+	Egypt: "Africa/Cairo",
+	Indonesia: "Asia/Jakarta",
+	United_Kingdom: "Europe/London",
+	Thailand: "Asia/Bangkok",
+	Saudi_Arabia: "Asia/Riyadh",
+	Netherlands: "Europe/Amsterdam",
+	Sweden: "Europe/Stockholm",
+	Switzerland: "Europe/Zurich",
+	Turkey: "Europe/Istanbul",
+	Pakistan: "Asia/Karachi",
+	Portugal: "Europe/Lisbon",
+	Iran: "Asia/Tehran",
+	Canada_East: "America/Halifax",
+	Canada_West: "America/Vancouver",
+	New_Zealand: "Pacific/Auckland",
+	Philippines: "Asia/Manila",
+	Chile: "America/Santiago",
+	Colombia: "America/Bogota",
+	Norway: "Europe/Oslo",
+	Poland: "Europe/Warsaw",
+	Belgium: "Europe/Brussels",
+	Denmark: "Europe/Copenhagen",
+	Singapore: "Asia/Singapore",
+	Malaysia: "Asia/Kuala_Lumpur",
+	Nigeria: "Africa/Lagos",
+	Kenya: "Africa/Nairobi",
+	Bangladesh: "Asia/Dhaka",
+	Vietnam: "Asia/Ho_Chi_Minh",
+	Ireland: "Europe/Dublin",
+	Austria: "Europe/Vienna",
+	Hungary: "Europe/Budapest",
+	Czech_Republic: "Europe/Prague",
+	Greece: "Europe/Athens",
+	Israel: "Asia/Jerusalem",
+	Ukraine: "Europe/Kiev",
+	Kazakhstan: "Asia/Almaty",
+	Uzbekistan: "Asia/Tashkent",
+	Maldives: "Indian/Maldives",
+	Iceland: "Atlantic/Reykjavik",
+	Peru: "America/Lima",
+	Paraguay: "America/Asuncion",
+	// Adding 30 more countries
+	Morocco: "Africa/Casablanca",
+	Algeria: "Africa/Algiers",
+	Ghana: "Africa/Accra",
+	Angola: "Africa/Luanda",
+	Zambia: "Africa/Lusaka",
+	Ethiopia: "Africa/Addis_Ababa",
+	Senegal: "Africa/Dakar",
+	Tanzania: "Africa/Dar_es_Salaam",
+	Uganda: "Africa/Kampala",
+	Zimbabwe: "Africa/Harare",
+	Mozambique: "Africa/Maputo",
+	Sri_Lanka: "Asia/Colombo",
+	Nepal: "Asia/Kathmandu",
+	Bhutan: "Asia/Thimphu",
+	Myanmar: "Asia/Yangon",
+	Lebanon: "Asia/Beirut",
+	Iraq: "Asia/Baghdad",
+	Jordan: "Asia/Amman",
+	Qatar: "Asia/Qatar",
+	Oman: "Asia/Muscat",
+	Kuwait: "Asia/Kuwait",
+	Bahrain: "Asia/Bahrain",
+	Costa_Rica: "America/Costa_Rica",
+	Venezuela: "America/Caracas",
+	Uruguay: "America/Montevideo",
+	Ecuador: "America/Guayaquil",
+	Bolivia: "America/La_Paz",
+	Cuba: "America/Havana",
+	Dominican_Republic: "America/Santo_Domingo",
+	Guatemala: "America/Guatemala"
+};
+
+// Save displayedCountries to chrome.storage.local
+function saveDisplayedCountries() {
+	chrome.storage.local.set({ displayedCountries }, () => {
+		console.log("Saved to storage:", displayedCountries);
+	});
+}
+
+// Load displayedCountries from chrome.storage.local
+function loadDisplayedCountries() {
+	chrome.storage.local.get(["displayedCountries"], (result) => {
+		if (result.displayedCountries) {
+			// Load from storage
+			displayedCountries = result.displayedCountries;
+		} else {
+			// Save defaults if no data found
+			saveDisplayedCountries();
 		}
-	    });
-    
-	    timezoneContainer.appendChild(timezoneItem);
+		renderTimezones();
 	});
-    }
-    
-    // Gets the current time in a given timezone
-    function getTimeInTimezone(timezone) {
-	return new Intl.DateTimeFormat("en-US", {
-	    timeZone: timezone,
-	    hour: "2-digit",
-	    minute: "2-digit",
-	    hour12: true,
-	}).format(new Date());
-    }
-    
-    // Fetches available countries from the API and removes duplicates
-    async function fetchAvailableCountries() {
-	console.log("Fetching available countries...");
-	try {
-	    const response = await fetch("https://api.apyhub.com/data/dictionary/timezone", {
-		headers: {
-		    "Content-Type": "application/json",
-		    "apy-token": "APY0aeIyxkTLqXwvNMAqy6YhbNlqEuRzNg4zvcIz0Kzz9prT8YkycmiiIriQd2UVcfwnX",
-		},
-	    });
-    
-	    const data = await response.json();
-	    console.log("API Response:", data);
-    
-	    if (data && data.data) {
-		const uniqueTimezones = new Set();
-    
-		availableCountries = data.data
-		    .map((tz) => tz.value)
-		    .filter((timezone) => {
-			if (!uniqueTimezones.has(timezone)) {
-			    uniqueTimezones.add(timezone);
-			    return true;
+}
+
+// Render timezones (UI for displayedCountries)
+function renderTimezones() {
+	const timezoneContainer = document.getElementById("timezones");
+	timezoneContainer.innerHTML = "";
+
+	// Sort displayed countries alphabetically
+	const sortedDisplayedCountries = Object.entries(displayedCountries).sort(([a], [b]) =>
+		a.localeCompare(b)
+	);
+
+	sortedDisplayedCountries.forEach(([country, timezone]) => {
+		const timezoneItem = document.createElement("div");
+		timezoneItem.className = "timezone-item";
+		timezoneItem.innerHTML = `
+			<div class="timezone-info">
+				<div class="timezone-name">${country}</div>
+				<div class="timezone-time">${getTimeInTimezone(timezone)}</div>
+			</div>
+			<div class="timezone-actions">
+				<button class="delete-btn" data-country="${country}">Delete</button>
+			</div>
+		`;
+
+		// Delete button functionality
+		timezoneItem.querySelector(".delete-btn").addEventListener("click", () => {
+			// Move the deleted country back to predefined countries
+			if (!predefinedCountries[country]) {
+				predefinedCountries[country] = timezone;
 			}
-			return false;
-		    })
-		    .map((timezone) => ({ country: timezone, timezone }));
-    
-		console.log("Filtered Available Countries:", availableCountries);
-		renderCountryDropdown();
-	    } else {
-		console.error("Invalid API response:", data);
-	    }
-	} catch (error) {
-	    console.error("Error fetching available countries:", error);
-	}
-    }
-    
-    // Updates the country dropdown with available options
-    function renderCountryDropdown() {
-	const countryDropdown = document.getElementById("country-dropdown");
-	countryDropdown.innerHTML = "";
-    
-	availableCountries.forEach((country) => {
-	    const option = document.createElement("option");
-	    option.value = country.timezone;
-	    option.textContent = country.timezone;
-	    countryDropdown.appendChild(option);
+			delete displayedCountries[country];
+			saveDisplayedCountries();
+			renderTimezones();
+			renderCountryDropdown();
+		});
+
+		timezoneContainer.appendChild(timezoneItem);
 	});
-    
-	console.log("Dropdown Updated with Full Timezones");
-    }
-    
-    // Opens the country selection modal and fetches countries
-    document.getElementById("add-country").addEventListener("click", () => {
-	document.getElementById("country-selection-modal").style.display = "block";
-	fetchAvailableCountries();
-    });
-    
-    // Adds the selected country to the displayed list
-    document.getElementById("confirm-add").addEventListener("click", () => {
+}
+
+// Get current time in a given timezone
+function getTimeInTimezone(timezone) {
+	return new Intl.DateTimeFormat("en-US", {
+		timeZone: timezone,
+		hour: "2-digit",
+		minute: "2-digit",
+		hour12: true
+	}).format(new Date());
+}
+
+// Render dropdown for available countries
+function renderCountryDropdown() {
+	const countryDropdown = document.getElementById("country-dropdown");
+	countryDropdown.innerHTML = ""; // Clear previous options
+
+	// Sort predefined countries alphabetically and filter unused ones
+	const sortedPredefinedCountries = Object.entries(predefinedCountries)
+		.filter(([country]) => !displayedCountries[country])
+		.sort(([a], [b]) => a.localeCompare(b));
+
+	if (sortedPredefinedCountries.length === 0) {
+		const noOption = document.createElement("option");
+		noOption.textContent = "No countries available to add";
+		noOption.disabled = true;
+		countryDropdown.appendChild(noOption);
+		return;
+	}
+
+	sortedPredefinedCountries.forEach(([country, timezone]) => {
+		const option = document.createElement("option");
+		option.value = timezone;
+		option.textContent = country.replace(/_/g, " "); // Replace underscores with spaces
+		countryDropdown.appendChild(option);
+	});
+
+	console.log("Dropdown Updated with Sorted Countries");
+}
+
+// Add selected country to displayedCountries
+document.getElementById("confirm-add").addEventListener("click", () => {
 	const countryDropdown = document.getElementById("country-dropdown");
 	const selectedOption = countryDropdown.options[countryDropdown.selectedIndex];
-    
+
 	if (!selectedOption) {
-	    alert("Please select a country to add.");
-	    return;
+		alert("Please select a valid country to add.");
+		return;
 	}
-    
+
 	const countryName = selectedOption.textContent;
 	const timezone = selectedOption.value;
-    
-	if (Object.keys(displayedCountries).length >= maxAdditionalCountries) {
-	    alert("You can only add up to 10 countries.");
-	    return;
-	}
-    
+
 	displayedCountries[countryName] = timezone;
+	delete predefinedCountries[countryName]; // Remove from dropdown options
+
+	saveDisplayedCountries();
 	renderTimezones();
-    
-	availableCountries = availableCountries.filter((country) => country.value !== timezone);
 	renderCountryDropdown();
-    
+
 	document.getElementById("country-selection-modal").style.display = "none";
-    
-	const addCountryBtn = document.getElementById("add-country");
-	if (Object.keys(displayedCountries).length >= maxAdditionalCountries) {
-	    addCountryBtn.disabled = true;
-	    addCountryBtn.textContent = "Limit Reached";
-	}
-    });
-    
-    // Initial render of default timezones
-    renderTimezones();
-    
+});
+
+// Open modal for adding countries
+document.getElementById("add-country").addEventListener("click", () => {
+	document.getElementById("country-selection-modal").style.display = "block";
+	renderCountryDropdown();
+});
+
+// Load stored countries on startup
+loadDisplayedCountries();
