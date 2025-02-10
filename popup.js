@@ -10,8 +10,15 @@ let displayedCountries = {
 	Japan: "Asia/Tokyo"
 };
 
-// Predefined static list of countries (up to 50)
 const predefinedCountries = {
+	Afghanistan: "Asia/Kabul",
+	Brazil: "America/Sao_Paulo",
+	Canada: "America/Toronto",
+	China: "Asia/Shanghai",
+	France: "Europe/Paris",
+	Germany: "Europe/Berlin",
+	India: "Asia/Kolkata",
+	Japan: "Asia/Tokyo",
 	United_States: "America/New_York",
 	Australia: "Australia/Sydney",
 	Russia: "Europe/Moscow",
@@ -62,7 +69,6 @@ const predefinedCountries = {
 	Iceland: "Atlantic/Reykjavik",
 	Peru: "America/Lima",
 	Paraguay: "America/Asuncion",
-	// Adding 30 more countries
 	Morocco: "Africa/Casablanca",
 	Algeria: "Africa/Algiers",
 	Ghana: "Africa/Accra",
@@ -116,45 +122,43 @@ function loadDisplayedCountries() {
 	});
 }
 
-// Render timezones (UI for displayedCountries)
 function renderTimezones() {
 	const timezoneContainer = document.getElementById("timezones");
 	timezoneContainer.innerHTML = "";
-
+    
 	// Sort displayed countries alphabetically
 	const sortedDisplayedCountries = Object.entries(displayedCountries).sort(([a], [b]) =>
-		a.localeCompare(b)
+	    a.localeCompare(b)
 	);
-
+    
 	sortedDisplayedCountries.forEach(([country, timezone]) => {
-		const timezoneItem = document.createElement("div");
-		timezoneItem.className = "timezone-item";
-		timezoneItem.innerHTML = `
-			<div class="timezone-info">
-				<div class="timezone-name">${country}</div>
-				<div class="timezone-time">${getTimeInTimezone(timezone)}</div>
-			</div>
-			<div class="timezone-actions">
-				<button class="delete-btn" data-country="${country}">Delete</button>
-			</div>
-		`;
-
-		// Delete button functionality
-		timezoneItem.querySelector(".delete-btn").addEventListener("click", () => {
-			// Move the deleted country back to predefined countries
-			if (!predefinedCountries[country]) {
-				predefinedCountries[country] = timezone;
-			}
-			delete displayedCountries[country];
-			saveDisplayedCountries();
-			renderTimezones();
-			renderCountryDropdown();
-		});
-
-		timezoneContainer.appendChild(timezoneItem);
+	    const timezoneItem = document.createElement("div");
+	    timezoneItem.className = "timezone-item";
+	    timezoneItem.innerHTML = `
+		<div class="timezone-info">
+		    <div class="timezone-name">${country}</div>
+		    <div class="timezone-time">${getTimeInTimezone(timezone)}</div>
+		</div>
+		<div class="timezone-actions">
+		    <i class="fas fa-trash delete-icon" data-country="${country}"></i>
+		</div>
+	    `;
+    
+	    // Add functionality to the delete icon
+	    timezoneItem.querySelector(".delete-icon").addEventListener("click", () => {
+		if (!predefinedCountries[country]) {
+		    predefinedCountries[country] = timezone;
+		}
+		delete displayedCountries[country];
+		saveDisplayedCountries();
+		renderTimezones();
+		renderCountryDropdown();
+	    });
+    
+	    timezoneContainer.appendChild(timezoneItem);
 	});
-}
-
+    }
+    
 // Get current time in a given timezone
 function getTimeInTimezone(timezone) {
 	return new Intl.DateTimeFormat("en-US", {
