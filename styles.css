@@ -1,61 +1,56 @@
 body {
 	font-family: Arial, sans-serif;
-	background: linear-gradient(135deg, #ffffff, #f2f2f2); /* Light white-to-grey gradient */
+	background: linear-gradient(135deg, #ffffff, #f2f2f2);
 	margin: 0;
 	padding: 5px;
-	color: #2c2c2c; /* Dark grey text for readability */
+	color: #2c2c2c;
+	background-image: url("icons/bg.jpg");
     }
     
     .container {
 	width: 320px;
 	margin: 0 auto;
-	padding: 10px 5px;
+	padding: 7px 5px;
 	min-height: 380px;
 	max-height: none;
 	overflow: hidden;
 	border-radius: 10px;
-	background-color: #d0d0d0; /* Very light grey container */
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-	transition: height 0.3s ease;
     }
     
     .title {
 	text-align: center;
-	font-size: 22px;
+	font-size: 25px;
 	font-weight: bold;
 	padding: 10px;
-	color: #333333; /* Darker grey for title */
-	border-bottom: 2px solid #cccccc; /* Light grey border */
+	color: #ffffff;
+	border-bottom: 2px solid #cccccc;
 	margin-bottom: 15px;
     }
     
     .timezones {
-	max-height: 450px;
+	max-height: 500px;
 	overflow-y: auto;
 	margin-top: 5px;
-	background: #aeaeae; /* Very light grey background */
 	border-radius: 10px;
 	padding: 10px;
-	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); /* Inner shadow */
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
     }
     
     .timezone-item {
-	font-size: 15px;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 12px;
-	background-color: #7f7f7f; /* Light grey for timezone items */
-	color: #ffffff; /* Dark grey text */
+	padding: 7px;
 	margin-bottom: 8px;
-	border-radius: 5px;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-	transition: transform 0.2s ease, background-color 0.2s ease; /* Smooth hover effect */
+	border: #bfbfbf 2px solid;
+	border-radius: 10px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	transition: transform 0.2s ease, background-color 0.2s ease;
     }
     
     .timezone-item:hover {
-	transform: scale(1.02); /* Slightly enlarge on hover */
-	background-color: #d9d9d9; /* Slightly darker grey on hover */
+	transform: scale(1.02);
+	background-color: #000000;
     }
     
     .timezone-info {
@@ -68,28 +63,30 @@ body {
     
     .timezone-name {
 	text-align: left;
+	font-weight: bold;
 	margin-left: 10px;
-	color: #ffffff; /* Dark grey text */
+	color: #ffffff;
+	font-size: 15px;
     }
     
     .timezone-time {
 	font-weight: bold;
-	font-size: 20px;
+	font-size: 25px;
 	text-align: right;
 	margin-right: 15px;
 	color: #ffffff;
     }
     
     .delete-icon {
-	color: #d9534f; /* Soft red for delete */
+	color: #d9534f;
 	font-size: 18px;
 	cursor: pointer;
 	transition: color 0.3s ease, transform 0.2s ease;
     }
     
     .delete-icon:hover {
-	color: #c9302c; /* Slightly darker red on hover */
-	transform: scale(1.2); /* Slight zoom on hover */
+	color: #c9302c;
+	transform: scale(1.2);
     }
     
     .add-country-btn {
@@ -99,19 +96,17 @@ body {
 	font-size: 16px;
 	width: 60%;
 	padding: 12px;
-	background: linear-gradient(135deg, #e6e6e6, #d9d9d9); /* Light grey gradient */
-	color: #333333;
 	border: none;
 	border-radius: 10px;
 	cursor: pointer;
 	font-weight: bold;
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 	transition: background-color 0.3s ease, transform 0.2s ease;
     }
     
     .add-country-btn:hover {
-	background: #cccccc; /* Slightly darker grey on hover */
-	transform: scale(1.05); /* Slight zoom */
+	background: #cccccc;
+	transform: scale(1.05);
     }
     
     .modal {
@@ -120,18 +115,18 @@ body {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	background: #ffffff; /* White modal for contrast */
+	background: #ffffff;
 	padding: 20px;
 	border-radius: 10px;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Stronger shadow */
-	color: #2c2c2c; /* Dark grey text inside modal */
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	color: #2c2c2c;
     }
     
     .confirm-btn {
 	margin-top: 10px;
 	padding: 10px 20px;
-	background: linear-gradient(135deg, #d9d9d9, #cccccc); /* Light grey gradient */
-	color: #333333;
+	background: linear-gradient(135deg, #0a0a0a, #292828);
+	color: #ffffff;
 	border: none;
 	border-radius: 5px;
 	cursor: pointer;
@@ -140,7 +135,7 @@ body {
     }
     
     .confirm-btn:hover {
-	background: #bfbfbf; /* Slightly darker grey */
-	transform: scale(1.05); /* Slight zoom */
+	background: #4b4a4a;
+	transform: scale(1.05);
     }
     
